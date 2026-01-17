@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "ColabToPDF",
+  "version": "1.0.0",
+  "description": "Surgical-grade PDF conversion for Google Colab.",
+  "permissions": ["activeTab", "scripting", "storage"],
+  "host_permissions": ["https://colab.research.google.com/*"],
+  "action": {
+    "default_popup": "ui/popup/popup.html",
+    "default_icon": "assets/icon-128.png"
+  },
+  "background": {
+    "service_worker": "service-worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://colab.research.google.com/*"],
+      "js": ["core/loader.js"],
+      "css": ["ui/inject.css"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://colab.research.google.com/*"],
+      "js": ["core/world-connector.js"],
+      "world": "MAIN",
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "core/injector.js",
+        "core/extractor.js",
+        "core/transformer.js",
+        "core/pdf-engine.js",
+        "templates/*", 
+        "assets/*"
+      ],
+      "matches": ["https://colab.research.google.com/*"]
+    }
+  ]
+}

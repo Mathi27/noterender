@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="../../templates/system.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="header">
+    <span class="logo mono">COLAB TO PDF</span>
+    <span class="status-dot"></span>
+  </div>
+
+  <div class="panel info-panel">
+    <div class="stat-row">
+      <span class="label">Status</span>
+      <span id="status-text" class="value mono">Ready</span>
+    </div>
+    <div class="stat-row">
+      <span class="label">Cells Detected</span>
+      <span id="cell-count" class="value mono">--</span>
+    </div>
+  </div>
+
+  <div class="panel settings-panel">
+    <div class="section-title">CONFIGURATION</div>
+    <c-toggle id="opt-code" label="Include Code" checked></c-toggle>
+    <c-toggle id="opt-output" label="Include Outputs" checked></c-toggle>
+    <c-toggle id="opt-images" label="Optimize Images" checked></c-toggle>
+  </div>
+
+  <div class="actions">
+    <c-button id="btn-generate" variant="primary">GENERATE PDF</c-button>
+  </div>
+
+  <script src="../components/c-button.js"></script>
+  <script src="../components/c-toggle.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

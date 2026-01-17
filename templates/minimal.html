@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{TITLE}}</title>
+    <style>
+        /* RESET & VARS */
+        :root {
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-mono: "SF Mono", "Menlo", "Monaco", "Courier New", monospace;
+            --c-fg: #111;
+            --c-bg: #fff;
+            --c-subtle: #666;
+            --c-border: #eaeaea;
+            --c-code-bg: #fafafa;
+        }
+
+        * { box-sizing: border-box; }
+        
+        body {
+            font-family: var(--font-sans);
+            color: var(--c-fg);
+            background: var(--c-bg);
+            line-height: 1.6;
+            margin: 0 auto;
+            max-width: 210mm; /* A4 Width */
+            padding: 4rem 2rem;
+            -webkit-print-color-adjust: exact;
+        }
+
+        /* TYPOGRAPHY */
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            margin-bottom: 0.5rem;
+            line-height: 1.1;
+        }
+
+        .meta {
+            font-size: 0.875rem;
+            color: var(--c-subtle);
+            border-bottom: 1px solid var(--c-border);
+            padding-bottom: 2rem;
+            margin-bottom: 3rem;
+            font-family: var(--font-mono);
+        }
+
+        /* CELLS */
+        .cell { margin-bottom: 2.5rem; break-inside: avoid; }
+
+        /* MARKDOWN */
+        .markdown { font-size: 1rem; color: #333; }
+        .markdown p { margin-bottom: 1em; }
+        .markdown h1, .markdown h2, .markdown h3 { margin-top: 1.5em; margin-bottom: 0.5em; font-weight: 600; letter-spacing: -0.02em; }
+
+        /* CODE BLOCKS */
+        .code-group {
+            border: 1px solid var(--c-border);
+            border-radius: 6px;
+            overflow: hidden;
+            background: var(--c-code-bg);
+        }
+
+        .code-source {
+            padding: 1rem;
+            margin: 0;
+            background: #fff;
+            border-bottom: 1px solid var(--c-border);
+        }
+
+        .code-source code {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: #24292e; /* Github Dark Gray */
+            white-space: pre-wrap;
+            display: block;
+            line-height: 1.5;
+        }
+
+        /* OUTPUTS */
+        .outputs {
+            padding: 1rem;
+            background: var(--c-code-bg);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--c-subtle);
+            border-top: 1px dashed var(--c-border); /* Dashed separation */
+        }
+        
+        .outputs img {
+            max-width: 100%;
+            border-radius: 4px;
+            border: 1px solid var(--c-border);
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        /* PRINT OVERRIDES */
+        @media print {
+            body { padding: 0; max-width: none; }
+            .code-group { border: 1px solid #ddd; }
+            @page { margin: 20mm; size: A4; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>{{TITLE}}</h1>
+        <div class="meta">Generated via ColabToPDF • {{DATE}}</div>
+    </header>
+
+    <main>
+        {{CONTENT}}
+    </main>
+</body>
+</html>
