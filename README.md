@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/note-render.png" alt="NoteRender logo" width="120">
+  <img src="assets/note-render.png" alt="NoteRender logo" width="300">
 </p>
 
 <h1 align="center">NoteRender</h1>
