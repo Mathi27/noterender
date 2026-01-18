@@ -60,4 +60,11 @@ Most notebook-to-PDF workflows are:
 - boring, predictable output (this is a feature).
 
 ---
-Author : Mathi Yuvarajan 
+ 
+todo : 
+
+- Convert IPYNB (Jupyter Notebook) to PDF, choose paper size and change page orientation to portrait or landscape.
+- Convert IPYNB (Jupyter Notebook) to PDF and change the margins of the document.
+- Choose a template to change the style, and look and feel of your IPYNB (Jupyter Notebook) file and convert it to PDF.
+- Convert IPYNB (Jupyter Notebook) to password-protected PDF.
+- Features are welcome...

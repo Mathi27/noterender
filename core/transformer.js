@@ -42,7 +42,7 @@ export class Transformer {
   }
 
   static _cleanSource(text) {
-    // Remove excessive whitespace but keep indentation
+    
     return text.replace(/\r\n/g, '\n');
   }
 
@@ -50,12 +50,12 @@ export class Transformer {
     if (!outputs || outputs.length === 0) return [];
     
     return outputs.map(output => {
-      // Prioritize visual outputs
+     
       if (output.data && output.data['image/png']) {
         return { type: 'image', data: output.data['image/png'], format: 'png' };
       }
       if (output.data && output.data['text/html']) {
-        // Sanitize HTML if strictly necessary, or keep as raw for iframe
+        
         return { type: 'html', data: output.data['text/html'] };
       }
       if (output.stream_text || (output.data && output.data['text/plain'])) {
