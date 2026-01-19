@@ -60,11 +60,24 @@ Most notebook-to-PDF workflows are:
 - boring, predictable output (this is a feature).
 
 ---
- 
-todo : 
 
-- Convert IPYNB (Jupyter Notebook) to PDF, choose paper size and change page orientation to portrait or landscape.
-- Convert IPYNB (Jupyter Notebook) to PDF and change the margins of the document.
-- Choose a template to change the style, and look and feel of your IPYNB (Jupyter Notebook) file and convert it to PDF.
-- Convert IPYNB (Jupyter Notebook) to password-protected PDF.
-- Features are welcome...
+### Colab to PDF – Planned Features by 2026 FEB 
+
+| #  | Feature Title                          | Description                                                                 | Status           |
+|----|----------------------------------------|-----------------------------------------------------------------------------|------------------|
+| 1  | Paper Size & Orientation               | Convert IPYNB to PDF with selectable paper size (A4, A3, Letter) and orientation (Portrait/Landscape). | Yet to be pushed |
+| 2  | Custom Margins                         | Set top, bottom, left, and right margins for the output PDF.               | Yet to be pushed |
+| 3  | PDF Styling Templates                  | Choose from predefined templates to control fonts, spacing, colors, and layout. | Yet to be pushed |
+| 4  | Password-Protected PDF                | Encrypt the generated PDF with a user-defined password.                   | Yet to be pushed |
+| 5  | Select Cells to Export                | Export only selected cells (by tag, index range, or checkbox UI).         | Yet to be pushed |
+| 6  | Hide / Show Code or Output            | Option to hide code cells, hide outputs, or export only outputs.           | Yet to be pushed |
+| 7  | Add Header & Footer                   | Add custom header/footer with title, author name, date, and page numbers. | Yet to be pushed |
+| 8  | Table of Contents Generation          | Auto-generate a clickable TOC from markdown headings.                      | Yet to be pushed |
+| 9  | Syntax Highlighting Themes            | Choose code syntax highlighting themes (light/dark/monokai, etc.).         | Yet to be pushed |
+| 10 | Embed Fonts & Offline-Safe PDF        | Embed fonts to ensure the PDF renders correctly on any device.            | Yet to be pushed |
+| 11 | Watermark Support                    | Add text or image watermark (e.g., “Draft”, “Confidential”).              | Yet to be pushed |
+| 12 | Batch Conversion                     | Convert multiple notebooks into PDFs in one go or zip output.             | Yet to be pushed |
+| 13 | CLI Version                           | Command-line tool to convert IPYNB to PDF locally (e.g., `colab2pdf file.ipynb`). | Yet to be pushed |
+| 14 | GitHub Actions Support               | GitHub Action to auto-convert notebooks in a repo to PDFs on push or release. | Yet to be pushed |
+| 15 | Theme Marketplace                    | Community-driven gallery to browse, install, and share PDF templates.    | Yet to be pushed |
+| 16 | Metadata Editor                     | Edit PDF metadata such as title, author, subject, keywords, and creation date. | Yet to be pushed |
