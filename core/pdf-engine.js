@@ -1,106 +1,125 @@
 /**
- * CORE: PDF Engine
- * PURPOSE: Render cleaned data into Printable HTML
+ * CORE: PDF Engine (v8.0)
  */
-
 import { Transformer } from './transformer.js';
 import { Extractor } from './extractor.js';
 
 export class PDFEngine {
   constructor() {
     this.extractor = new Extractor();
+    this.isGenerating = false;
   }
 
   async generate(options = {}) {
+    if (this.isGenerating) return;
+    this.isGenerating = true;
+
     try {
-      // 1. Extract
+      this._showLoading();
       const rawData = await this.extractor.getNotebookData();
-      
-      // 2. Transform
       const data = Transformer.process(rawData);
-
-      // 3. Render (Virtual DOM in hidden iframe)
-      await this._renderToFrame(data, options);
-
+      await this._renderToFrame(data);
     } catch (error) {
-      console.error('[ColabToPDF] Engine Failure:', error);
-      alert('Failed to generate PDF: ' + error.message);
+      alert("Error: " + error.message);
+    } finally {
+      this.isGenerating = false;
+      this._hideLoading();
     }
   }
 
-  async _renderToFrame(data, options) {
-    // Create a hidden iframe to render the PDF content
+  async _renderToFrame(data) {
     let iframe = document.getElementById('colab-to-pdf-frame');
     if (iframe) iframe.remove();
-    
+
     iframe = document.createElement('iframe');
     iframe.id = 'colab-to-pdf-frame';
-    iframe.style.position = 'fixed';
-    iframe.style.top = '0';
-    iframe.style.left = '0';
-    iframe.style.width = '210mm'; // A4 width
-    iframe.style.height = '0px'; // Hidden
-    iframe.style.visibility = 'hidden'; 
-    iframe.style.zIndex = '-9999';
+    // Use fixed dimensions for consistency
+    Object.assign(iframe.style, {
+      position: 'fixed', top: '0', left: '0',
+      width: '210mm', height: '0',
+      visibility: 'hidden', zIndex: '-9999'
+    });
     document.body.appendChild(iframe);
 
-    // Fetch the Minimal Template
-    const response = await fetch(chrome.runtime.getURL('templates/minimal.html'));
+    const response = await fetch(chrome.runtime.getURL('templates/professional.html'));
     let template = await response.text();
 
-    // Inject CSS
-    const cssResponse = await fetch(chrome.runtime.getURL('templates/system.css'));
-    const systemCSS = await cssResponse.text();
-
-    // Hydrate Template (Simple String Replacement for speed)
-    // In a real build step, we might use a lightweight template engine like Mustache
-    // But for <250KB limit, string literal replacement is surgically fast.
-    
     const contentHTML = this._generateHTML(data);
-    
+    const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    const cleanTitle = (data.title || "Untitled").replace(/[#*]/g, '').trim();
+
     const finalHTML = template
-      .replace('{{TITLE}}', data.title)
-      .replace('{{STYLES}}', systemCSS)
-      .replace('{{CONTENT}}', contentHTML);
+      .replace(/{{TITLE}}/g, cleanTitle)
+      .replace(/{{DATE}}/g, dateStr)
+      .replace(/{{CONTENT}}/g, contentHTML);
 
     const doc = iframe.contentWindow.document;
     doc.open();
     doc.write(finalHTML);
     doc.close();
 
-    // Wait for images to load then print
-    iframe.onload = () => {
-      setTimeout(() => {
-        iframe.contentWindow.focus();
-        iframe.contentWindow.print();
-        // iframe.remove(); // Cleanup after print (optional)
-      }, 500);
-    };
+    return new Promise((resolve) => {
+      iframe.onload = () => {
+        // Wait 2.5s for images to render (Crucial for large charts)
+        setTimeout(() => {
+            iframe.contentWindow.focus();
+            iframe.contentWindow.print();
+            resolve();
+        }, 2500); 
+      };
+    });
   }
 
   _generateHTML(data) {
-    // Convert JSON objects to HTML strings
     return data.content.map(cell => {
       if (cell.type === 'markdown') {
-        // NOTE: In production, integrate a micro-markdown parser here (e.g. marked.min.js)
-        // For now, we wrap in simple paragraph
-        return `<div class="cell markdown">${cell.source}</div>`;
+        return `<div class="cell markdown">${this._parseMarkdown(cell.source)}</div>`;
       } 
       
       if (cell.type === 'code') {
-        const outputs = cell.outputs.map(o => {
-            if (o.type === 'image') return `<img src="data:image/png;base64,${o.data}" />`;
-            if (o.type === 'text') return `<pre class="output">${o.data}</pre>`;
+        const outputs = (cell.outputs || []).map(o => {
+            // Direct Base64 Image
+            if (o.type === 'image') return `<div class="output-image"><img src="data:${o.mime};base64,${o.data}" /></div>`;
+            // SVG
+            if (o.type === 'svg') return `<div class="output-image">${o.data}</div>`;
+            // NEW: Source Link Image (Extracted from HTML)
+            if (o.type === 'image-src') return `<div class="output-image"><img src="${o.src}" /></div>`;
+            // Text
+            if (o.type === 'text') return `<pre class="output-text">${o.data.replace(/</g, "&lt;")}</pre>`;
             return '';
         }).join('');
 
         return `
-          <div class="cell code-group">
-            <pre class="code-source"><code>${cell.source}</code></pre>
-            <div class="outputs">${outputs}</div>
+          <div class="cell">
+            <div class="code-container">
+                <div class="code-source">${cell.source}</div>
+                ${outputs ? `<div class="outputs">${outputs}</div>` : ''}
+            </div>
           </div>
         `;
       }
+      return '';
     }).join('\n');
+  }
+
+  _parseMarkdown(text) {
+    return text
+      .replace(/^#\s+(.*?)$/gm, '<h1>$1</h1>')
+      .replace(/^##\s+(.*?)$/gm, '<h2>$1</h2>')
+      .replace(/^###\s+(.*?)$/gm, '<h3>$1</h3>')
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>')
+      .replace(/\n/g, '<br>');
+  }
+
+  _showLoading() {
+    const d = document.createElement('div');
+    d.id = 'loader';
+    d.innerHTML = '<div style="position:fixed;top:20px;right:20px;background:#1a73e8;color:white;padding:14px 28px;border-radius:50px;z-index:99999;box-shadow:0 4px 12px rgba(0,0,0,0.3);font-family:sans-serif;font-weight:600;">Generating PDF...</div>';
+    document.body.appendChild(d);
+  }
+  _hideLoading() {
+    const l = document.getElementById('loader');
+    if(l) l.remove();
   }
 }

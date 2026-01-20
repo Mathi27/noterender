@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{TITLE}}</title>
+    <style>
+        /* CLEAN STANDARD THEME (No Mac Style) */
+        
+        :root {
+            --font-sans: "Roboto", "Segoe UI", Helvetica, Arial, sans-serif;
+            --font-mono: "Menlo", "Consolas", "Monaco", monospace;
+            --border-color: #e0e0e0;
+            --code-bg: #f9f9f9;
+        }
+
+        /* PRINT CONFIGURATION */
+        @page {
+            size: A4;
+            /* Standard margins: 25mm Top/Bottom, 20mm Sides */
+            margin: 25mm 20mm; 
+        }
+
+        body {
+            font-family: var(--font-sans);
+            line-height: 1.5;
+            color: #222;
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 40px; /* Screen padding only */
+            background: white;
+            -webkit-print-color-adjust: exact;
+        }
+
+        /* HEADER */
+        header {
+            margin-bottom: 30px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin: 0 0 8px 0;
+            color: #000;
+            font-weight: 700;
+        }
+
+        .meta {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* CELLS */
+        .cell {
+            margin-bottom: 24px;
+            break-inside: avoid; /* Crucial: Keeps code+output together */
+        }
+
+        /* MARKDOWN */
+        .markdown {
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            color: #333;
+        }
+        
+        .markdown img {
+             max-width: 100%;
+             height: auto;
+             display: block;
+             margin: 10px 0;
+        }
+
+        /* STANDARD CELL STYLE */
+        .code-block {
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: white;
+        }
+
+        /* Code Input Area */
+        .code-source {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            padding: 12px;
+            margin: 0;
+            background: var(--code-bg); /* Light gray background */
+            border-bottom: 1px solid var(--border-color);
+            white-space: pre-wrap;
+            overflow-x: auto;
+            color: #2c3e50;
+        }
+        
+        /* Simulates the Jupyter "In [ ]: " input prompt style */
+        .code-source::before {
+            content: "In [ ]: ";
+            color: #3862bc;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 4px;
+            font-size: 11px;
+            opacity: 0.7;
+        }
+
+        /* Output Area */
+        .outputs {
+            padding: 12px;
+            background: #fff;
+        }
+
+        .output-text {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            white-space: pre-wrap;
+            color: #444;
+            margin: 0;
+        }
+
+        .output-image {
+            margin-top: 8px;
+        }
+        
+        .output-image img {
+            max-width: 100%;
+            border: 1px solid #eee;
+        }
+
+        /* Print Specific Overrides */
+        @media print {
+            body { 
+                padding: 0; 
+                margin: 0; 
+            }
+            /* Ensure the header repeats or stays clean */
+            header {
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>{{TITLE}}</h1>
+        <div class="meta">Generated: {{DATE}}</div>
+    </header>
+    <main>
+        {{CONTENT}}
+    </main>
+</body>
+</html>

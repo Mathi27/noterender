@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{TITLE}}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 1. PAPER MARGINS (Aggressive) */
+        @page {
+            size: A4;
+            /* 25mm = ~1 inch. Standard academic/professional margin */
+            margin: 25mm 25mm 25mm 25mm; 
+        }
+
+        :root {
+            --font-main: 'Roboto', -apple-system, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+            --color-text: #202124;
+            --border-color: #dadce0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            color: var(--color-text);
+            line-height: 1.5;
+            /* Ensure content fills the printable area */
+            width: 100%; 
+            margin: 0;
+            padding: 0;
+            background: white;
+            -webkit-print-color-adjust: exact;
+        }
+
+        /* SCREEN PREVIEW (Only for testing) */
+        @media screen {
+            body {
+                max-width: 210mm;
+                margin: 20px auto;
+                padding: 40px;
+                border: 1px solid #eee;
+            }
+        }
+
+        /* HEADER */
+        .doc-header {
+            margin-bottom: 32px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 16px;
+        }
+        h1.title { font-size: 24pt; margin: 0; color: #202124; }
+        .meta { font-size: 10pt; color: #5f6368; margin-top: 8px; }
+
+        /* CONTENT */
+        .cell {
+            margin-bottom: 28px;
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+
+        /* MARKDOWN */
+        .markdown h1 { font-size: 18pt; margin-top: 24px; color: #000; }
+        .markdown h2 { font-size: 15pt; margin-top: 20px; color: #000; }
+        .markdown p { margin-bottom: 12px; text-align: justify; }
+        .markdown img { max-width: 100%; border-radius: 4px; display: block; margin: 16px 0; }
+
+        /* CODE BLOCKS */
+        .code-container {
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .code-source {
+            font-family: var(--font-code);
+            font-size: 9pt;
+            padding: 14px;
+            background: #f8f9fa;
+            color: #37474f;
+            white-space: pre-wrap;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* OUTPUTS */
+        .outputs {
+            padding: 14px;
+            background: #fff;
+        }
+
+        /* HIDE BORDER IF NO OUTPUTS */
+        .code-container:not(:has(.outputs)) .code-source {
+            border-bottom: none;
+        }
+
+        .output-text {
+            font-family: var(--font-code);
+            font-size: 9pt;
+            color: #444;
+            white-space: pre-wrap;
+            margin: 0;
+        }
+
+        .output-image {
+            margin-top: 12px;
+            display: flex;
+            justify-content: center; /* Center visuals */
+        }
+        
+        .output-image img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #f1f3f4;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        /* PRINT OVERRIDES */
+        @media print {
+            body { margin: 0; padding: 0; width: 100%; }
+            .doc-header { break-after: avoid; }
+            a { text-decoration: none; color: #1a73e8; }
+            a[href]:after { content: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <header class="doc-header">
+        <h1 class="title">{{TITLE}}</h1>
+        <div class="meta">Generated: {{DATE}}</div>
+    </header>
+    <main>{{CONTENT}}</main>
+</body>
+</html>

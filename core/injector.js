@@ -1,81 +1,70 @@
 /**
- * MODULE: UI Injector
- * PURPOSE: Surgically insert PDF trigger into Colab Toolbar
- * PERFORMANCE: Uses MutationObserver to catch dynamic DOM load
+ * CORE: Injector
+ * Creates the Floating "Generate PDF" Button
  */
-// ... (Previous Button Injection Code) ...
 
-// LISTEN FOR COMMANDS (From Popup or Injected Button)
-import { PDFEngine } from './pdf-engine.js'; // Ensure this is handled via module loading
-
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === "GENERATE_PDF") {
-    console.log('[ColabToPDF] Starting Engine...');
-    
-    const engine = new PDFEngine();
-    engine.generate(request.options || {});
-  }
-});
-
+import { PDFEngine } from './pdf-engine.js'; 
 
 (function() {
     'use strict';
 
-    const CONFIG = {
-        TOOLBAR_SELECTOR: '#header-right', // The right side of Colab top bar
-        BUTTON_ID: 'colab-to-pdf-trigger',
-        LABEL: 'Download PDF'
-    };
+    function createFloatingButton() {
+        if (document.getElementById('colab-pdf-btn')) return;
 
-    function createTriggerButton() {
         const btn = document.createElement('button');
-        btn.id = CONFIG.BUTTON_ID;
+        btn.id = 'colab-pdf-btn';
+        btn.innerHTML = '📄 Generate PDF';
         
-        // Use the new Google Material class
-        btn.className = 'c-btn-google'; 
-        
-        // Add a Download Icon (SVG) + Text for full native look
-        btn.innerHTML = `
-            <svg viewBox="0 0 24 24">
-                <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
-            </svg>
-            Download PDF
-        `;
-
-        // We REMOVE the inline style overrides that forced square corners
-        // Only keep structural necessity if needed, but CSS handles it now.
-        
-        btn.addEventListener('click', () => {
-             // Visual feedback (Ripple effect simulation)
-            btn.style.opacity = '0.8';
-            setTimeout(() => btn.style.opacity = '1', 150);
-
-            chrome.runtime.sendMessage({ action: "TRIGGER_EXTRACTION" });
+        // Floating Style (Merged from your content.js)
+        Object.assign(btn.style, {
+            position: 'fixed',
+            bottom: '24px',
+            right: '24px',
+            zIndex: '10000',
+            background: '#4285f4', // Google Blue
+            color: 'white',
+            border: 'none',
+            padding: '12px 24px',
+            borderRadius: '50px',
+            fontWeight: '600',
+            cursor: 'pointer',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+            fontFamily: "'Google Sans', Roboto, sans-serif",
+            fontSize: '14px',
+            transition: 'transform 0.2s, box-shadow 0.2s',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px'
         });
 
-        return btn;
-    }
-    function inject() {
-        if (document.getElementById(CONFIG.BUTTON_ID)) return; // Already injected
+        // Hover Effects
+        btn.onmouseenter = () => {
+            btn.style.transform = 'translateY(-2px)';
+            btn.style.boxShadow = '0 6px 16px rgba(0,0,0,0.3)';
+        };
+        btn.onmouseleave = () => {
+            btn.style.transform = 'translateY(0)';
+            btn.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+        };
 
-        const toolbar = document.querySelector(CONFIG.TOOLBAR_SELECTOR);
-        if (toolbar) {
-            const btn = createTriggerButton();
-            toolbar.prepend(btn); // Add to the start of the right toolbar
-            console.log('[ColabToPDF] Injection Successful');
-        }
+        // Click Handler
+        btn.addEventListener('click', () => {
+            const engine = new PDFEngine();
+            engine.generate();
+        });
+
+        document.body.appendChild(btn);
     }
 
-    // Observer to handle Colab's lazy loading
-    const observer = new MutationObserver((mutations) => {
-        if (!document.getElementById(CONFIG.BUTTON_ID)) {
-            inject();
+    // Observer to handle Colab's dynamic loading
+    const observer = new MutationObserver(() => {
+        if (!document.getElementById('colab-pdf-btn')) {
+            createFloatingButton();
         }
     });
 
     observer.observe(document.body, { childList: true, subtree: true });
     
-    // Initial attempt
-    setTimeout(inject, 1000);
-
+    // Initial load
+    setTimeout(createFloatingButton, 1500);
 })();
