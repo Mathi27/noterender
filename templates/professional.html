@@ -6,96 +6,108 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
     
     <style>
-        /* 1. PAPER MARGINS (Aggressive) */
+        /* 1. RESET & BASE */
+        * { box-sizing: border-box; }
+        
+        /* 2. PAPER DEFINITION (The Browser Hint) */
         @page {
-            size: A4;
-            /* 25mm = ~1 inch. Standard academic/professional margin */
-            margin: 25mm 25mm 25mm 25mm; 
-        }
-
-        :root {
-            --font-main: 'Roboto', -apple-system, sans-serif;
-            --font-code: 'JetBrains Mono', monospace;
-            --color-text: #202124;
-            --border-color: #dadce0;
+            size: A4 portrait;
+            margin: 0; /* CRITICAL: We handle margins inside the body to prevent overriding */
         }
 
         body {
-            font-family: var(--font-main);
-            color: var(--color-text);
-            line-height: 1.5;
-            /* Ensure content fills the printable area */
-            width: 100%; 
             margin: 0;
             padding: 0;
-            background: white;
+            background: #f0f0f0; /* Gray background for screen preview */
+            font-family: 'Roboto', -apple-system, sans-serif;
+            color: #202124;
+            line-height: 1.5;
             -webkit-print-color-adjust: exact;
         }
 
-        /* SCREEN PREVIEW (Only for testing) */
-        @media screen {
-            body {
-                max-width: 210mm;
-                margin: 20px auto;
-                padding: 40px;
-                border: 1px solid #eee;
-            }
+        /* 3. THE PAGE CONTAINER (The Forced Margin) */
+        .print-container {
+            /* A4 Dimensions */
+            width: 210mm; 
+            min-height: 297mm;
+            
+            /* The REAL Margins (25mm = ~1 inch) */
+            padding: 25mm 25mm 25mm 25mm; 
+            
+            /* Center on screen */
+            margin: 20px auto; 
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
 
-        /* HEADER */
+        /* 4. HEADER */
         .doc-header {
-            margin-bottom: 32px;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 16px;
+            border-bottom: 2px solid #dadce0;
+            padding-bottom: 12px;
+            margin-bottom: 24px;
         }
-        h1.title { font-size: 24pt; margin: 0; color: #202124; }
-        .meta { font-size: 10pt; color: #5f6368; margin-top: 8px; }
+        h1.title { 
+            font-size: 22pt; 
+            margin: 0 0 8px 0; 
+            color: #000; 
+            line-height: 1.2;
+        }
+        .meta { 
+            font-size: 10pt; 
+            color: #5f6368; 
+        }
 
-        /* CONTENT */
+        /* 5. CONTENT STYLES */
         .cell {
-            margin-bottom: 28px;
-            break-inside: avoid;
-            page-break-inside: avoid;
+            margin-bottom: 24px;
+            break-inside: avoid; /* Keeps cell together */
         }
 
-        /* MARKDOWN */
-        .markdown h1 { font-size: 18pt; margin-top: 24px; color: #000; }
-        .markdown h2 { font-size: 15pt; margin-top: 20px; color: #000; }
+        /* Markdown */
         .markdown p { margin-bottom: 12px; text-align: justify; }
-        .markdown img { max-width: 100%; border-radius: 4px; display: block; margin: 16px 0; }
+        .markdown h1 { font-size: 18pt; margin-top: 24px; color: #000; border-bottom: 1px solid #eee; padding-bottom: 4px; }
+        .markdown h2 { font-size: 14pt; margin-top: 20px; color: #000; }
+        .markdown img { 
+            max-width: 100%; 
+            display: block; 
+            margin: 12px auto; 
+            border: 1px solid #eee; 
+            border-radius: 4px;
+        }
 
-        /* CODE BLOCKS */
+        /* Code Blocks */
         .code-container {
-            border: 1px solid var(--border-color);
+            border: 1px solid #dadce0;
             border-radius: 6px;
             overflow: hidden;
-        }
-
-        .code-source {
-            font-family: var(--font-code);
-            font-size: 9pt;
-            padding: 14px;
-            background: #f8f9fa;
-            color: #37474f;
-            white-space: pre-wrap;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        /* OUTPUTS */
-        .outputs {
-            padding: 14px;
             background: #fff;
         }
 
-        /* HIDE BORDER IF NO OUTPUTS */
+        .code-source {
+            background: #f8f9fa;
+            color: #37474f;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9pt;
+            padding: 12px 16px;
+            white-space: pre-wrap;
+            border-bottom: 1px solid #dadce0;
+        }
+
+        /* Outputs */
+        .outputs {
+            padding: 12px 16px;
+            background: #fff;
+        }
+
+        /* Hide border if no output */
         .code-container:not(:has(.outputs)) .code-source {
             border-bottom: none;
         }
 
         .output-text {
-            font-family: var(--font-code);
+            font-family: 'JetBrains Mono', monospace;
             font-size: 9pt;
-            color: #444;
+            color: #3c4043;
             white-space: pre-wrap;
             margin: 0;
         }
@@ -103,30 +115,39 @@
         .output-image {
             margin-top: 12px;
             display: flex;
-            justify-content: center; /* Center visuals */
+            justify-content: center;
         }
-        
         .output-image img {
             max-width: 100%;
-            height: auto;
             border: 1px solid #f1f3f4;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
         }
 
-        /* PRINT OVERRIDES */
+        /* 6. PRINT OVERRIDES (The Nuclear Option) */
         @media print {
-            body { margin: 0; padding: 0; width: 100%; }
+            body {
+                background: white;
+            }
+            .print-container {
+                width: 100%;
+                margin: 0;
+                box-shadow: none;
+                /* Crucial: Maintain the padding even when printing */
+                padding: 25mm !important; 
+            }
             .doc-header { break-after: avoid; }
-            a { text-decoration: none; color: #1a73e8; }
             a[href]:after { content: none !important; }
         }
     </style>
 </head>
 <body>
-    <header class="doc-header">
-        <h1 class="title">{{TITLE}}</h1>
-        <div class="meta">Generated: {{DATE}}</div>
-    </header>
-    <main>{{CONTENT}}</main>
+    <div class="print-container">
+        <header class="doc-header">
+            <h1 class="title">{{TITLE}}</h1>
+            <div class="meta">Generated: {{DATE}}</div>
+        </header>
+        <main>
+            {{CONTENT}}
+        </main>
+    </div>
 </body>
 </html>
