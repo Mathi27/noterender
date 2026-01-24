@@ -5,6 +5,81 @@ import { Transformer } from './transformer.js';
 import { Extractor } from './extractor.js';
 
 export class PDFEngine {
+  async _renderToFrame(data) {
+    let iframe = document.getElementById('colab-to-pdf-frame');
+    if (iframe) iframe.remove();
+
+    iframe = document.createElement('iframe');
+    iframe.id = 'colab-to-pdf-frame';
+    // Off-screen rendering
+    Object.assign(iframe.style, {
+      position: 'absolute', left: '-10000px', top: '0',
+      width: '210mm', height: 'auto', zIndex: '-1'
+    });
+    
+    document.body.appendChild(iframe);
+
+    // FETCH LATEX TEMPLATE
+    const response = await fetch(chrome.runtime.getURL('templates/latex.html'));
+    let template = await response.text();
+
+    const contentHTML = this._generateHTML(data);
+    const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    const cleanTitle = (data.title || "Untitled").replace(/[#*]/g, '').trim();
+
+    const finalHTML = template
+      .replace(/{{TITLE}}/g, cleanTitle)
+      .replace(/{{DATE}}/g, dateStr)
+      .replace(/{{CONTENT}}/g, contentHTML);
+
+    const doc = iframe.contentWindow.document;
+    doc.open();
+    doc.write(finalHTML);
+    doc.close();
+
+    return new Promise((resolve) => {
+      iframe.onload = () => {
+        // Wait 3 seconds for MathJax typeset & Image Decode
+        setTimeout(() => {
+            iframe.contentWindow.focus();
+            iframe.contentWindow.print();
+            resolve();
+        }, 3000); 
+      };
+    });
+  }
+
+  _generateHTML(data) {
+    return data.content.map(cell => {
+      if (cell.type === 'markdown') {
+        // Note: We leave $math$ alone so MathJax can find it!
+        return `<div class="cell markdown">${this._parseMarkdown(cell.source)}</div>`;
+      } 
+      
+      if (cell.type === 'code') {
+        const outputs = (cell.outputs || []).map(o => {
+            if (o.type === 'image') return `<div class="output-image"><img src="data:${o.mime};base64,${o.data}" /></div>`;
+            if (o.type === 'svg') return `<div class="output-image">${o.data}</div>`;
+            if (o.type === 'image-src') return `<div class="output-image"><img src="${o.src}" /></div>`;
+            if (o.type === 'text') return `<pre class="output-text">${o.data.replace(/</g, "&lt;")}</pre>`;
+            return '';
+        }).join('');
+
+        // WRAP SOURCE IN <pre><code class="python"> for Highlight.js
+        return `
+          <div class="cell">
+            <div class="code-container">
+                <div class="code-source">
+                    <pre><code class="language-python">${cell.source.replace(/</g, "&lt;")}</code></pre>
+                </div>
+                ${outputs ? `<div class="outputs">${outputs}</div>` : ''}
+            </div>
+          </div>
+        `;
+      }
+      return '';
+    }).join('\n');
+  }
   constructor() {
     this.extractor = new Extractor();
     this.isGenerating = false;

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{TITLE}}</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 1. LATEX PAGE LAYOUT */
+        @page {
+            size: A4;
+            margin: 25mm 25mm 25mm 25mm; /* Standard Academic Margins */
+        }
+
+        :root {
+            --font-serif: 'Cormorant Garamond', 'Times New Roman', serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --color-black: #000000;
+        }
+
+        body {
+            font-family: var(--font-serif);
+            font-size: 12pt;
+            line-height: 1.6;
+            color: var(--color-black);
+            max-width: 210mm;
+            margin: 0 auto;
+            background: white;
+            text-align: justify; /* LaTeX justification */
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* 2. HEADER - ACADEMIC STYLE */
+        .doc-header {
+            text-align: center;
+            margin-bottom: 2.5em;
+            padding-bottom: 1em;
+            border-bottom: 1px solid #000;
+        }
+        
+        h1.title { 
+            font-size: 24pt; 
+            font-weight: 700; 
+            margin-bottom: 0.3em; 
+            letter-spacing: -0.01em;
+        }
+        
+        .meta { 
+            font-size: 11pt; 
+            font-style: italic; 
+            font-family: var(--font-serif);
+        }
+
+        /* 3. CONTENT TYPOGRAPHY */
+        .markdown h1 { 
+            font-size: 16pt; 
+            font-weight: 700; 
+            margin-top: 2em; 
+            margin-bottom: 1em; 
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.2em;
+        }
+        
+        .markdown h2 { 
+            font-size: 14pt; 
+            font-weight: 700; 
+            margin-top: 1.5em;
+            margin-bottom: 0.8em;
+        }
+        
+        .markdown p { margin-bottom: 1em; }
+        
+        /* Links: Simple underline, black */
+        .markdown a { color: #000; text-decoration: underline; }
+
+        /* 4. CODE BLOCKS - FRAMED */
+        .code-container {
+            border: 1px solid #333;
+            margin-bottom: 1.5em;
+            background: #fdfdfd;
+            box-shadow: 3px 3px 0px rgba(0,0,0,0.1); /* Subtle depth */
+            break-inside: avoid;
+        }
+
+        .code-source {
+            font-family: var(--font-mono);
+            font-size: 9pt;
+            background: #f4f4f4;
+            padding: 10px 15px;
+            border-bottom: 1px solid #333;
+            color: #222;
+            white-space: pre-wrap;
+        }
+
+        /* Outputs */
+        .outputs {
+            padding: 10px 15px;
+            font-family: var(--font-mono);
+            font-size: 9pt;
+            background: #fff;
+        }
+
+        /* Remove divider if empty */
+        .code-container:not(:has(.outputs)) .code-source { border-bottom: none; }
+
+        .output-text { margin: 0; white-space: pre-wrap; }
+        
+        /* 5. VISUALIZATIONS */
+        .output-image {
+            display: flex;
+            justify-content: center;
+            margin: 1.5em 0;
+        }
+        .output-image img {
+            max-width: 90%;
+            border: 1px solid #ddd;
+            padding: 4px;
+            background: #fff;
+        }
+
+        /* 6. MATH SIMULATION (CSS Only) */
+        .math-inline {
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 0 2px;
+        }
+
+        /* PRINT SETTINGS */
+        @media print {
+            body { margin: 0; width: 100%; }
+            .doc-header { break-after: avoid; }
+            a[href]:after { content: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <header class="doc-header">
+        <h1 class="title">{{TITLE}}</h1>
+        <div class="meta">Generated: {{DATE}}</div>
+    </header>
+
+    <main>
+        {{CONTENT}}
+    </main>
+</body>
+</html>

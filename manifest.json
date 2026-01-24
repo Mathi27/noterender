@@ -3,11 +3,7 @@
   "name": "ColabToPDF",
   "version": "1.0.0",
   "description": "Export Google Colab notebooks to PDF",
-  "permissions": [
-    "activeTab",
-    "scripting",
-    "storage"
-  ],
+  "permissions": ["activeTab", "scripting", "storage"],
   "host_permissions": ["https://colab.research.google.com/*"],
   "action": {
     "default_popup": "ui/popup/popup.html",
@@ -32,11 +28,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": [
-        "core/*.js",
-        "templates/*.html",
-        "assets/*"
-      ],
+      "resources": ["core/*.js", "templates/*.html", "assets/*"],
       "matches": ["https://colab.research.google.com/*"]
     }
   ]
