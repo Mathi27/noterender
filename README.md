@@ -61,6 +61,8 @@ Most notebook-to-PDF workflows are:
 
 ---
 
+### Development is Paused | Open for contributions.
+
 ### Colab to PDF – Planned Features by 2026 FEB 
 
 | #  | Feature Title                          | Description                                                                 | Status           |
