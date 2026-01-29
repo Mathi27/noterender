@@ -67,7 +67,7 @@ Most notebook-to-PDF workflows are:
 
 | #  | Feature Title                          | Description                                                                 | Status           |
 |----|----------------------------------------|-----------------------------------------------------------------------------|------------------|
-| 1  | Paper Size & Orientation               | Convert IPYNB to PDF with selectable paper size (A4, A3, Letter) and orientation (Portrait/Landscape). | Yet to be pushed |
+| 1  | Paper Size & Orientation               | Convert IPYNB to PDF with selectable paper size (A4, A3, Letter) and orientation (Portrait/Landscape). | Pushed |
 | 2  | Custom Margins                         | Set top, bottom, left, and right margins for the output PDF.               | Yet to be pushed |
 | 3  | PDF Styling Templates                  | Choose from predefined templates to control fonts, spacing, colors, and layout. | Yet to be pushed |
 | 4  | Password-Protected PDF                | Encrypt the generated PDF with a user-defined password.                   | Yet to be pushed |
