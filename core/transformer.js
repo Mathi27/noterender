@@ -1,7 +1,3 @@
-/**
- * CORE: Transformer (v8.0 - Deep Image Extraction)
- * PURPOSE: Extracts images hidden inside HTML/Markdown outputs.
- */
 export class Transformer {
   
   static process(rawData) {
